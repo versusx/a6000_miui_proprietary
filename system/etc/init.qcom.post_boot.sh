@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.67@Marshmallow-MIUI-Kernel
-# Last code update: December 29, 2016
+# Last code update: December 31, 2016
 ###################################################################
 
 # Stripalov protector for alto5_premium. All rights reserved © 2016
@@ -1551,7 +1551,7 @@ PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && 
 # Disable adaptive LMK
 echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 # Don't kill background apps
-echo 0,32768,0,0,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
+echo 0,16384,16384,16384,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
 
 # Stripalov LTE fix for alto5_premium. All rights reserved © 2016
 # Set multiband mode for RIL
