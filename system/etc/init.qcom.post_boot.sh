@@ -1558,7 +1558,7 @@ echo 0,16384,16384,16384,32768,32768 > /sys/module/lowmemorykiller/parameters/mi
 sleep 30
 service call phone 94 i32 20
 
-# Stripalov Google killer for alto5_premium. All rights reserved © 2016
+# Stripalov killer for alto5_premium. All rights reserved © 2016
 # Kill Google App
 busybox killall -9 com.google.android.googlequicksearchbox
 # Kill PM
@@ -1567,6 +1567,8 @@ busybox killall -9 com.android.vending
 busybox killall -9 com.google.android.gms
 # Kill GS Framework
 busybox killall -9 com.google.android.gsf
+# Kill MiCloud
+busybox killall -9 com.xiaomi.xmsf
 
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
