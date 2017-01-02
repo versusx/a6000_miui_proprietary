@@ -1447,7 +1447,7 @@ echo 4066 > /sys/devices/soc.0/qcom,cpubw.30/devfreq/qcom,cpubw.30/min_freq
 
 # Stripalov YOTA hack for alto5_premium. All rights reserved © 2016
 # Fuck the YOTA
-busybox sysctl -w net.ipv4.ip_default_ttl=63
+# busybox sysctl -w net.ipv4.ip_default_ttl=63
 
 # Stripalov TCP fix for alto5_premium. All rights reserved © 2016
 busybox sysctl -w net.ipv4.tcp_timestamps=0
