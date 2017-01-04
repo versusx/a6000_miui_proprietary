@@ -1346,8 +1346,14 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.67@Marshmallow-MIUI-Kernel
-# Last code update: December 31, 2016
+# Last code update: January 4, 2017
 ###################################################################
+
+# Drop caches before applying settings
+# Sync caches and disks - drop caches
+sync && busybox sysctl -w vm.drop_caches=1
+sync && busybox sysctl -w vm.drop_caches=2
+sync && busybox sysctl -w vm.drop_caches=3
 
 # Stripalov protector for alto5_premium. All rights reserved © 2016
 # Check 7043 in build.prop
@@ -1417,14 +1423,14 @@ echo 0 > /sys/module/msm_thermal/core_control/enabled
 echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 # Set 1.2 GHz maximum frequency
 echo 1209600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-# Set 533 MHz minimum frequency
-echo 533333 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+# Set 800 MHz minimum frequency
+echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 # Set hispeed_freq
-echo 533333 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 # Set target_loads
-echo 0 533333:40 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+echo 0 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
 # Set above_hispeed_delay
-echo 533333 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 # Set go_hispeed_load
 echo 10 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 
@@ -1576,10 +1582,8 @@ busybox fstrim /data
 busybox fstrim /cache
 busybox fstrim /system
 
-# Drop caches before applying settings
-# Sync caches and disks - drop caches
-sync && busybox sysctl -w vm.drop_caches=1
-sync && busybox sysctl -w vm.drop_caches=2
-sync && busybox sysctl -w vm.drop_caches=3
+# Stripalov mpdecision daemon fix for alto5_premium. All rights reserved © 2017
+# Start mpdecision only after boot. Early startup broke next script lines!
+su -c /system/bin/mpdecision
 
 # End of the code
