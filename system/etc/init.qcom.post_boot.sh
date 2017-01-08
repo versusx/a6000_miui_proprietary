@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.67@Marshmallow-MIUI-Kernel
-# Last code update: January 4, 2017
+# Last code update: January 8, 2017
 ###################################################################
 
 # Drop caches before applying settings
@@ -1365,6 +1365,10 @@ fi
 # Stripalov hall sensor service for alto5_premium. All rights reserved © 2016
 # Start hall_service
 su -c /system/bin/hall_service
+
+# Stripalov double tap service for alto5_premium. All rights reserved © 2017
+# Start dt_service
+su -c /system/bin/dt_service
 
 # Stripalov AppsMover script for alto5_premium. All rights reserved © 2016
 # Copy data and obb folders to the sdcard1
