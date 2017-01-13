@@ -1345,7 +1345,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 
 ###################################################################
 # This is proprietary part of the code
-# Linux kernel version: 3.10.67@Marshmallow-MIUI-Kernel
+# Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
 # Last code update: January 13, 2017
 ###################################################################
 
