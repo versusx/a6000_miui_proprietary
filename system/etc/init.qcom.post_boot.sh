@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.67@Marshmallow-MIUI-Kernel
-# Last code update: January 8, 2017
+# Last code update: January 13, 2017
 ###################################################################
 
 # Drop caches before applying settings
@@ -1432,7 +1432,7 @@ echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 # Set hispeed_freq
 echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 # Set target_loads
-echo 0 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+echo 90 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
 # Set above_hispeed_delay
 echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 # Set go_hispeed_load
