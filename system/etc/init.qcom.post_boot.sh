@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: January 13, 2017
+# Last code update: January 16, 2017
 ###################################################################
 
 # Drop caches before applying settings
@@ -1455,9 +1455,10 @@ echo performance > /sys/devices/soc.0/qcom,cpubw.30/devfreq/qcom,cpubw.30/govern
 # Set minimum frequency for DDR bus
 echo 4066 > /sys/devices/soc.0/qcom,cpubw.30/devfreq/qcom,cpubw.30/min_freq
 
-# Stripalov YOTA hack for alto5_premium. All rights reserved © 2016
+# Stripalov YOTA hack for alto5_premium. All rights reserved © 2016 2017
 # Fuck the YOTA
-# busybox sysctl -w net.ipv4.ip_default_ttl=63
+# Use kernel feature
+su -c iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64
 
 # Stripalov TCP fix for alto5_premium. All rights reserved © 2016
 busybox sysctl -w net.ipv4.tcp_timestamps=0
