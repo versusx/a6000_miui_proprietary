@@ -1,8 +1,10 @@
 #!/system/bin/sh
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
 # It uses FocalTech driver from TCT kernel. All rights reserved © 2014 2015
-# Version: 1.1
+# Version: 1.2
 # Enable tp_gesture driver for touch panel
 echo 2 > /sys/devices/virtual/tp_gesture/tp_device/tp_gesture_id
+# Lock tp_gesture state
+chmod 0444 /sys/devices/virtual/tp_gesture/tp_device/tp_gesture_id
 # Catch getevent ft5x06_ts signal and turn on display
 (busybox script -q -c 'getevent /dev/input/event0' /dev/null | while read code; do echo "$code" | grep -q '^0001 0074 00000000.$' && echo 1 > /sys/devices/system/cpu/cpufreq/interactive/boost && input keyevent 26 && echo 0 > /sys/devices/system/cpu/cpufreq/interactive/boost; done) < /dev/null > /dev/null 2>/dev/null &
