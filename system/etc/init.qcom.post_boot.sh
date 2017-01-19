@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: January 16, 2017
+# Last code update: January 19, 2017
 ###################################################################
 
 # Drop caches before applying settings
@@ -1380,21 +1380,8 @@ busybox rm -rf /data/media/obb/*
 # Bind data and obb folders to the emulated sdcard
 mount -o bind /mnt/media_rw/sdcard1/Android/data /data/media/0/Android/data
 mount -o bind /mnt/media_rw/sdcard1/Android/obb /data/media/obb
-# Fix for VK audio
-busybox cp -r /data/media/0/.vkontakte /mnt/media_rw/sdcard1/
-busybox rm -rf /data/media/0/.vkontakte/*
-mount -o bind /mnt/media_rw/sdcard1/.vkontakte /data/media/0/.vkontakte
 # Show the readiness message
-msg -n Приложения сосланы на карту
-
-# Stripalov ext4 filesystem fix for alto5_premium. All rights reserved © 2016
-# Disable ext4 filesystem logging
-tune2fs_static -o journal_data_writeback /dev/block/mmcblk0p28
-tune2fs_static -O ^has_journal /dev/block/mmcblk0p28
-tune2fs_static -o journal_data_writeback /dev/block/mmcblk0p31
-tune2fs_static -O ^has_journal /dev/block/mmcblk0p31
-tune2fs_static -o journal_data_writeback /dev/block/mmcblk0p35
-tune2fs_static -O ^has_journal /dev/block/mmcblk0p35
+msg -n Приложения сосланы на карту title=AppsMover
 
 # Stripalov LOOP, RAM, MMC, ZRAM fix for alto5_premium. All rights reserved © 2016
 # Set variables
@@ -1502,6 +1489,10 @@ busybox sysctl -w net.core.netdev_max_backlog=30000
 busybox sysctl -w net.ipv4.tcp_fastopen=1
 busybox sysctl -w net.ipv4.tcp_slow_start_after_idle=0
 
+# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
+# Set multiband mode for RIL
+service call phone 94 i32 20
+
 # Stripalov VM tweaks for alto5_premium. All rights reserved © 2016
 busybox sysctl -w vm.vfs_cache_pressure=10
 busybox sysctl -w vm.dirty_expire_centisecs=500
@@ -1553,33 +1544,30 @@ echo 0 > /dev/cpuset/background/cpus
 echo 500 > /sys/kernel/mm/ksm/sleep_millisecs
 
 # Stripalov OOM fix for alto5_premium. All rights reserved © 2016
-# Fix MIUI Home unload
-PPID=$(busybox pidof com.miui.home) && echo -17 > /proc/$PPID/oom_adj && chmod 0444 /proc/$PPID/oom_adj
 # Fix interface crash
 PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && chmod 0444 /proc/$PPID/oom_adj
+
+# Stripalov killer for alto5_premium. All rights reserved © 2016 2017
+# Kill Google App
+busybox killall -15 com.google.android.googlequicksearchbox:interactor && busybox killall -9 com.google.android.googlequicksearchbox:search
+# Kill Play Market
+busybox killall -15 com.android.vending
+# Kill Google Play Services
+busybox killall -15 com.google.android.gms && busybox killall -9 com.google.android.gms.persistent
+# Kill Google Services Framework
+busybox killall -15 com.google.process.gapps
+# Kill Google Partner Setup
+busybox killall -15 com.google.android.partnersetup
+# Kill GBoard
+busybox killall -15 com.google.android.inputmethod.latin
+# Kill MiCloud
+busybox killall -15 com.xiaomi.xmsf
 
 # Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
 # Disable adaptive LMK
 echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 # Don't kill background apps
 echo 0,16384,16384,16384,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
-
-# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
-# Set multiband mode for RIL
-sleep 30
-service call phone 94 i32 20
-
-# Stripalov killer for alto5_premium. All rights reserved © 2016
-# Kill Google App
-busybox killall -9 com.google.android.googlequicksearchbox
-# Kill PM
-busybox killall -9 com.android.vending
-# Kill GP Services
-busybox killall -9 com.google.android.gms
-# Kill GS Framework
-busybox killall -9 com.google.android.gsf
-# Kill MiCloud
-busybox killall -9 com.xiaomi.xmsf
 
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
