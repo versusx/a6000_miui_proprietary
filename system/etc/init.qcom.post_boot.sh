@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: January 19, 2017
+# Last code update: January 21, 2017
 ###################################################################
 
 # Drop caches before applying settings
@@ -1565,9 +1565,9 @@ busybox killall -15 com.xiaomi.xmsf
 
 # Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
 # Disable adaptive LMK
-echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 # Don't kill background apps
-echo 0,16384,16384,16384,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
+echo 16384,32768,32768,32768,65536,65536 > /sys/module/lowmemorykiller/parameters/minfree
 
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
