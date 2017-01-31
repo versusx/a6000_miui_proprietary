@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: January 25, 2017
+# Last code update: January 31, 2017
 ###################################################################
 
 # Drop caches before applying settings
@@ -1426,21 +1426,16 @@ echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 echo 10 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 
 # Stripalov Adreno 306 fix for alto5_premium. All rights reserved © 2016
-# Enable performance governor for GPU
-echo performance > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/devfreq/1c00000.qcom,kgsl-3d0/governor
-# Set minimum frequency for GPU
-echo 400000000 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/devfreq/1c00000.qcom,kgsl-3d0/min_freq
+# Enable simple_ondemand governor for GPU
+echo simple_ondemand > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/devfreq/1c00000.qcom,kgsl-3d0/governor
 # Fix low gaming speed
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_bus_on
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_rail_on
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_clk_on
 echo 1000000 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/idle_timer
 
-# Stripalov RAM tuner for alto5_premium. All rights reserved © 2016
-# Enable performance governor for DDR bus
-echo performance > /sys/devices/soc.0/qcom,cpubw.30/devfreq/qcom,cpubw.30/governor
-# Set minimum frequency for DDR bus
-echo 4066 > /sys/devices/soc.0/qcom,cpubw.30/devfreq/qcom,cpubw.30/min_freq
+# Stripalov 2D HW enabler for alto5_premium. All rights reserved © 2017
+su -c setprop persist.sys.ui.hw 1
 
 # Stripalov YOTA hack for alto5_premium. All rights reserved © 2016 2017
 # Fuck the YOTA
@@ -1494,28 +1489,26 @@ busybox sysctl -w net.ipv4.tcp_slow_start_after_idle=0
 service call phone 94 i32 20
 
 # Stripalov VM tweaks for alto5_premium. All rights reserved © 2016
-busybox sysctl -w vm.vfs_cache_pressure=10
+busybox sysctl -w vm.oom_dump_tasks=0
+busybox sysctl -w vm.oom_kill_allocating_task=1
+busybox sysctl -w vm.vfs_cache_pressure=1000
+busybox sysctl -w vm.overcommit_memory=0
+busybox sysctl -w vm.overcommit_ratio=150
 busybox sysctl -w vm.dirty_expire_centisecs=500
 busybox sysctl -w vm.dirty_writeback_centisecs=3000
 busybox sysctl -w vm.block_dump=0
-busybox sysctl -w vm.laptop_mode=5
-busybox sysctl -w vm.min_free_kbytes=3587
+busybox sysctl -w vm.laptop_mode=0
+busybox sysctl -w vm.min_free_kbytes=2691
 busybox sysctl -w vm.min_free_order_shift=4
-busybox sysctl -w vm.overcommit_ratio=10
-busybox sysctl -w vm.oom_dump_tasks=0
-busybox sysctl -w vm.oom_kill_allocating_task=1
-busybox sysctl -w vm.panic_on_oom=0
 busybox sysctl -w vm.page-cluster=2
-busybox sysctl -w vm.dirty_background_ratio=5
-busybox sysctl -w vm.dirty_ratio=10
-busybox sysctl -w vm.swappiness=30
+busybox sysctl -w vm.dirty_background_ratio=10
+busybox sysctl -w vm.dirty_ratio=20
+busybox sysctl -w vm.swappiness=100
+busybox sysctl -w vm.panic_on_oom=0
 
 # Stripalov kernel tweaks for alto5_premium. All rights reserved © 2016
-busybox sysctl -w fs.lease-break-time=5
-busybox sysctl -w fs.inotify.max_queued_events=32768
-busybox sysctl -w fs.inotify.max_user_instances=256
-busybox sysctl -w fs.inotify.max_user_watches=16384
-busybox sysctl -w fs.file-max=524288
+busybox sysctl -w kernel.random.read_wakeup_threshold=1708
+busybox sysctl -w kernel.random.write_wakeup_threshold=2048
 busybox sysctl -w kernel.msgmni=32768
 busybox sysctl -w kernel.msgmax=8192
 busybox sysctl -w kernel.msgmnb=16384
@@ -1523,29 +1516,31 @@ busybox sysctl -w kernel.shmmni=4096
 busybox sysctl -w kernel.shmall=2097152
 busybox sysctl -w kernel.shmmax=268435456
 busybox sysctl -w kernel.sem='250 32000 100 128'
+busybox sysctl -w fs.lease-break-time=8
+busybox sysctl -w fs.inotify.max_queued_events=32768
+busybox sysctl -w fs.inotify.max_user_instances=256
+busybox sysctl -w fs.inotify.max_user_watches=16384
+busybox sysctl -w fs.file-max=524288
 busybox sysctl -w kernel.panic_on_oops=0
 busybox sysctl -w kernel.panic=0
 busybox sysctl -w fs.nr_open=1053696
 busybox sysctl -w kernel.threads-max=525810
-busybox sysctl -w kernel.random.write_wakeup_threshold=256
-busybox sysctl -w kernel.random.read_wakeup_threshold=128
 
 # Stripalov CPU management fix for alto5_premium. All rights reserved © 2016
 echo 1024 > /dev/cpuctl/cpu.shares
 echo 800000 > /dev/cpuctl/cpu.rt_runtime_us
 echo 1000000 > /dev/cpuctl/cpu.rt_period_us
+echo 62 > /dev/cpuctl/bg_non_interactive/cpu.shares
 
 # Stripalov CPU background fix for alto5_premium. All rights reserved © 2016
 # Use single-core mode when screen off
 echo 0 > /dev/cpuset/background/cpus
 
 # Stripalov KSM fix for alto5_premium. All rights reserved © 2016
+# Scan less pages
+busybox echo 64 > /sys/kernel/mm/ksm/pages_to_scan
 # Increase the delay between scans of memory pages
 echo 500 > /sys/kernel/mm/ksm/sleep_millisecs
-
-# Stripalov OOM fix for alto5_premium. All rights reserved © 2016
-# Fix interface crash
-PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && chmod 0444 /proc/$PPID/oom_adj
 
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
 # Kill Google App
@@ -1563,11 +1558,15 @@ busybox killall -15 com.google.android.inputmethod.latin
 # Kill MiCloud
 busybox killall -15 com.xiaomi.xmsf
 
+# Stripalov OOM fix for alto5_premium. All rights reserved © 2016
+# Fix interface crash
+PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && chmod 0444 /proc/$PPID/oom_adj
+
 # Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
 # Enable adaptive LMK
 echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 # Don't kill background apps
-echo 0,16384,16384,16384,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree 
+echo 0,32768,32768,32768,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
 
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
