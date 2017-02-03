@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: January 31, 2017
+# Last code update: February 3, 2017
 ###################################################################
 
 # Drop caches before applying settings
@@ -1493,7 +1493,7 @@ busybox sysctl -w vm.oom_dump_tasks=0
 busybox sysctl -w vm.oom_kill_allocating_task=1
 busybox sysctl -w vm.vfs_cache_pressure=1000
 busybox sysctl -w vm.overcommit_memory=0
-busybox sysctl -w vm.overcommit_ratio=150
+busybox sysctl -w vm.overcommit_ratio=200
 busybox sysctl -w vm.dirty_expire_centisecs=500
 busybox sysctl -w vm.dirty_writeback_centisecs=3000
 busybox sysctl -w vm.block_dump=0
