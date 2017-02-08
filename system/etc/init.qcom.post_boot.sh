@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: February 3, 2017
+# Last code update: February 9, 2017
 ###################################################################
 
 # Drop caches before applying settings
@@ -1414,16 +1414,22 @@ echo 0 > /sys/module/msm_thermal/core_control/enabled
 echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 # Set 1.2 GHz maximum frequency
 echo 1209600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 # Set 800 MHz minimum frequency
 echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 # Set hispeed_freq
 echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 # Set target_loads
-echo 90 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+echo 40 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/target_loads
 # Set above_hispeed_delay
-echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+echo 1500000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 # Set go_hispeed_load
-echo 10 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+echo 85 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+echo 0444 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 
 # Stripalov Adreno 306 fix for alto5_premium. All rights reserved © 2016
 # Enable simple_ondemand governor for GPU
@@ -1526,6 +1532,9 @@ busybox sysctl -w kernel.panic=0
 busybox sysctl -w fs.nr_open=1053696
 busybox sysctl -w kernel.threads-max=525810
 
+# Stripalov device name fix for alto5_premium. All rights reserved © 2017
+su -c setprop persist.sys.device_name 7044X
+
 # Stripalov CPU management fix for alto5_premium. All rights reserved © 2016
 echo 1024 > /dev/cpuctl/cpu.shares
 echo 800000 > /dev/cpuctl/cpu.rt_runtime_us
@@ -1541,6 +1550,16 @@ echo 0 > /dev/cpuset/background/cpus
 busybox echo 64 > /sys/kernel/mm/ksm/pages_to_scan
 # Increase the delay between scans of memory pages
 echo 500 > /sys/kernel/mm/ksm/sleep_millisecs
+
+# Stripalov OOM fix for alto5_premium. All rights reserved © 2016
+# Fix interface crash
+PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && chmod 0444 /proc/$PPID/oom_adj
+
+# Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
+# Enable adaptive LMK
+echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+# Don't kill background apps
+echo 0,32768,32768,32768,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
 
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
 # Kill Google App
@@ -1558,21 +1577,17 @@ busybox killall -15 com.google.android.inputmethod.latin
 # Kill MiCloud
 busybox killall -15 com.xiaomi.xmsf
 
-# Stripalov OOM fix for alto5_premium. All rights reserved © 2016
-# Fix interface crash
-PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && chmod 0444 /proc/$PPID/oom_adj
-
-# Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
-# Enable adaptive LMK
-echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-# Don't kill background apps
-echo 0,32768,32768,32768,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
-
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
 busybox fstrim /data
 busybox fstrim /cache
 busybox fstrim /system
+
+# Drop caches after applying settings
+# Sync caches and disks - drop caches
+sync && busybox sysctl -w vm.drop_caches=1
+sync && busybox sysctl -w vm.drop_caches=2
+sync && busybox sysctl -w vm.drop_caches=3
 
 # Stripalov mpdecision daemon fix for alto5_premium. All rights reserved © 2017
 # Start mpdecision only after boot. Early startup broke next script lines!
