@@ -1346,16 +1346,16 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: February 15, 2017
+# Last code update: February 18, 2017
 ###################################################################
-
-# Stripalov hall sensor service for alto5_premium. All rights reserved © 2016
-# Start hall_service
-su -c /system/bin/hall_service
 
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
 # Start dt_service
 su -c /system/bin/dt_service
+
+# Stripalov hall sensor service for alto5_premium. All rights reserved © 2016
+# Start hall_service
+su -c /system/bin/hall_service
 
 # Stripalov AppsMover script for alto5_premium. All rights reserved © 2016
 # Copy data and obb folders to the sdcard1
@@ -1419,8 +1419,8 @@ echo 85 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 echo 0444 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 
 # Stripalov Adreno 306 fix for alto5_premium. All rights reserved © 2016
-# Enable simple_ondemand governor for GPU
-echo simple_ondemand > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/devfreq/1c00000.qcom,kgsl-3d0/governor
+# Enable cpufreq governor for GPU
+echo cpufreq > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/devfreq/1c00000.qcom,kgsl-3d0/governor
 # Fix low gaming speed
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_bus_on
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_rail_on
@@ -1481,7 +1481,7 @@ busybox sysctl -w net.ipv4.tcp_slow_start_after_idle=0
 busybox sysctl -w vm.oom_dump_tasks=0
 busybox sysctl -w vm.oom_kill_allocating_task=1
 busybox sysctl -w vm.vfs_cache_pressure=1000
-busybox sysctl -w vm.overcommit_memory=0
+busybox sysctl -w vm.overcommit_memory=1
 busybox sysctl -w vm.overcommit_ratio=100
 busybox sysctl -w vm.dirty_expire_centisecs=500
 busybox sysctl -w vm.dirty_writeback_centisecs=3000
@@ -1492,7 +1492,7 @@ busybox sysctl -w vm.min_free_order_shift=4
 busybox sysctl -w vm.page-cluster=2
 busybox sysctl -w vm.dirty_background_ratio=10
 busybox sysctl -w vm.dirty_ratio=20
-busybox sysctl -w vm.swappiness=30
+busybox sysctl -w vm.swappiness=100
 busybox sysctl -w vm.panic_on_oom=0
 
 # Stripalov kernel tweaks for alto5_premium. All rights reserved © 2016
@@ -1516,7 +1516,11 @@ busybox sysctl -w fs.nr_open=1053696
 busybox sysctl -w kernel.threads-max=525810
 
 # Stripalov device name fix for alto5_premium. All rights reserved © 2017
-su -c setprop persist.sys.device_name 7044
+su -c setprop persist.sys.device_name 7044X
+
+# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
+# Set multiband mode for RIL
+service call phone 94 i32 20
 
 # Stripalov CPU management fix for alto5_premium. All rights reserved © 2016
 echo 1024 > /dev/cpuctl/cpu.shares
@@ -1542,7 +1546,7 @@ PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && 
 # Enable adaptive LMK
 echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 # Don't kill background apps
-echo 0,32768,32768,32768,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
+echo 0,16384,16384,32768,32768,65536 > /sys/module/lowmemorykiller/parameters/minfree
 
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
 # Kill Google App
@@ -1559,10 +1563,6 @@ busybox killall -15 com.google.android.partnersetup
 busybox killall -15 com.google.android.inputmethod.latin
 # Kill MiCloud
 busybox killall -15 com.xiaomi.xmsf
-
-# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
-# Set multiband mode for RIL
-service call phone 94 i32 20
 
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
