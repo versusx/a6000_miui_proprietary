@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: February 18, 2017
+# Last code update: February 20, 2017
 ###################################################################
 
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
@@ -1402,14 +1402,14 @@ echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 # Set 1.2 GHz maximum frequency
 echo 1209600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-# Set 200 MHz minimum frequency
-echo 200000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+# Set 533 MHz minimum frequency
+echo 533333 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 # Set hispeed_freq
-echo 200000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+echo 533333 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 # Set target_loads
-echo 10 200000:20 400000:30 533333:40 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+echo 10 533333:40 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
 chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/target_loads
 # Set above_hispeed_delay
 echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
@@ -1546,7 +1546,7 @@ PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && 
 # Enable adaptive LMK
 echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 # Don't kill background apps
-echo 0,16384,16384,32768,32768,65536 > /sys/module/lowmemorykiller/parameters/minfree
+echo 0,16384,16384,32768,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
 
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
 # Kill Google App
