@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: February 20, 2017
+# Last code update: February 22, 2017
 ###################################################################
 
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
@@ -1520,6 +1520,7 @@ su -c setprop persist.sys.device_name 7044X
 
 # Stripalov LTE fix for alto5_premium. All rights reserved © 2016
 # Set multiband mode for RIL
+sleep 30
 service call phone 94 i32 20
 
 # Stripalov CPU management fix for alto5_premium. All rights reserved © 2016
