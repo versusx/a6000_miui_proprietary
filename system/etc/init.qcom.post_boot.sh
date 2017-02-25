@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: February 22, 2017
+# Last code update: February 25, 2017
 ###################################################################
 
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
@@ -1515,14 +1515,6 @@ busybox sysctl -w kernel.panic=0
 busybox sysctl -w fs.nr_open=1053696
 busybox sysctl -w kernel.threads-max=525810
 
-# Stripalov device name fix for alto5_premium. All rights reserved © 2017
-su -c setprop persist.sys.device_name 7044X
-
-# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
-# Set multiband mode for RIL
-sleep 30
-service call phone 94 i32 20
-
 # Stripalov CPU management fix for alto5_premium. All rights reserved © 2016
 echo 1024 > /dev/cpuctl/cpu.shares
 echo 800000 > /dev/cpuctl/cpu.rt_runtime_us
@@ -1539,15 +1531,19 @@ busybox echo 64 > /sys/kernel/mm/ksm/pages_to_scan
 # Increase the delay between scans of memory pages
 echo 500 > /sys/kernel/mm/ksm/sleep_millisecs
 
-# Stripalov OOM fix for alto5_premium. All rights reserved © 2016
-# Fix interface crash
-PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && chmod 0444 /proc/$PPID/oom_adj
-
 # Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
 # Enable adaptive LMK
 echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 # Don't kill background apps
-echo 0,16384,16384,32768,32768,32768 > /sys/module/lowmemorykiller/parameters/minfree
+echo 0,16384,16384,16384,16384,16384 > /sys/module/lowmemorykiller/parameters/minfree
+
+# Stripalov device name fix for alto5_premium. All rights reserved © 2017
+su -c setprop persist.sys.device_name 7044X
+
+# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
+# Set multiband mode for RIL
+sleep 30
+service call phone 94 i32 20
 
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
 # Kill Google App
