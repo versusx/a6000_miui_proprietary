@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: February 25, 2017
+# Last code update: March 11, 2017
 ###################################################################
 
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
@@ -1546,20 +1546,24 @@ sleep 30
 service call phone 94 i32 20
 
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
+# Kill Google Sync
+busybox killall -15 com.google.android.syncadapters.contacts
+# Kill MiCloud
+busybox killall -15 com.xiaomi.xmsf
 # Kill Google App
-busybox killall -15 com.google.android.googlequicksearchbox:interactor && busybox killall -15 com.google.android.googlequicksearchbox:search
+busybox killall -15 com.google.android.googlequicksearchbox:interactor | busybox killall -15 com.google.android.googlequicksearchbox:search
 # Kill Play Market
 busybox killall -15 com.android.vending
 # Kill Google Play Services
-busybox killall -15 com.google.android.gms && busybox killall -15 com.google.android.gms.persistent
+busybox killall -15 com.google.android.gms | busybox killall -15 com.google.android.gms.persistent | busybox killall -15 com.google.android.gms.unstable
 # Kill Google Services Framework
-busybox killall -15 com.google.process.gapps
+busybox killall -15 com.google.process.gapps | busybox killall -15 com.google.android.gsf
 # Kill Google Partner Setup
 busybox killall -15 com.google.android.partnersetup
 # Kill GBoard
 busybox killall -15 com.google.android.inputmethod.latin
-# Kill MiCloud
-busybox killall -15 com.xiaomi.xmsf
+# Kill mediaservers
+busybox killall -15 android.process.media | busybox killall -15 mediaserver
 
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
