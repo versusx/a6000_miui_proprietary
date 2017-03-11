@@ -1402,25 +1402,25 @@ echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 # Set 1.2 GHz maximum frequency
 echo 1209600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-# Set 533 MHz minimum frequency
-echo 533333 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+# Set 200 MHz minimum frequency
+echo 200000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 # Set hispeed_freq
-echo 533333 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+echo 200000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 # Set target_loads
-echo 10 533333:40 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+echo 10 200000:20 400000:30 533333:40 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
 chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/target_loads
 # Set above_hispeed_delay
-echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+echo 1209600 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 # Set go_hispeed_load
 echo 85 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 echo 0444 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 
 # Stripalov Adreno 306 fix for alto5_premium. All rights reserved © 2016
-# Enable cpufreq governor for GPU
-echo cpufreq > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/devfreq/1c00000.qcom,kgsl-3d0/governor
+# Enable simple_ondemand governor for GPU
+echo simple_ondemand > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/devfreq/1c00000.qcom,kgsl-3d0/governor
 # Fix low gaming speed
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_bus_on
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_rail_on
