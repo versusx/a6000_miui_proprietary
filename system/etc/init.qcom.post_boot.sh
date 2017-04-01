@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: March 25, 2017
+# Last code update: April 1, 2017
 ###################################################################
 
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
@@ -1426,11 +1426,6 @@ echo 1000000 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/idle_timer
 
 # Stripalov 2D HW enabler for alto5_premium. All rights reserved © 2017
 su -c setprop persist.sys.ui.hw 1
-
-# Stripalov YOTA hack for alto5_premium. All rights reserved © 2016 2017
-# Fuck the YOTA
-# Use kernel feature
-su -c iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64
 
 # Stripalov TCP fix for alto5_premium. All rights reserved © 2016
 busybox sysctl -w net.ipv4.tcp_timestamps=0
@@ -1535,12 +1530,12 @@ echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 echo 0,16384,16384,16384,16384,16384 > /sys/module/lowmemorykiller/parameters/minfree
 
 # Stripalov device name fix for alto5_premium. All rights reserved © 2017
-su -c setprop persist.sys.device_name 7044X
+su -c setprop persist.sys.device_name alto5_premium
 
+# Stripalov YOTA/MTS hack for alto5_premium. All rights reserved © 2016 2017
 # Stripalov LTE fix for alto5_premium. All rights reserved © 2016
-# Set multiband mode for RIL
-sleep 30
-service call phone 94 i32 20
+# Use kernel feature
+stop ril-daemon && su -c iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64 && start ril-daemon && sleep 30 && service call phone 94 i32 20
 
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
 # Sleep
@@ -1573,6 +1568,9 @@ busybox fstrim /system
 # Drop caches after applying settings
 # Sync caches and disks - drop caches
 sync && busybox sysctl -w vm.drop_caches=3
+
+# Free more RAM after boot
+am kill-all
 
 # Stripalov mpdecision daemon fix for alto5_premium. All rights reserved © 2017
 # Start mpdecision only after boot. Early startup broke next script lines!
