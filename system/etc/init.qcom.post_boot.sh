@@ -1346,8 +1346,11 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 1, 2017
+# Last code update: April 7, 2017
 ###################################################################
+
+# Free more RAM before applying settings
+am kill-all
 
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
 # Start dt_service
@@ -1416,6 +1419,8 @@ echo 1209600 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 # Set go_hispeed_load
 echo 10 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 echo 0444 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+# Disable CPU thermal protection
+echo 1 > /sys/module/msm_thermal/core_control/enabled
 
 # Stripalov Adreno 306 fix for alto5_premium. All rights reserved © 2016
 # Fix low gaming speed
@@ -1423,9 +1428,6 @@ echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_bus_on
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_rail_on
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_clk_on
 echo 1000000 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/idle_timer
-
-# Stripalov 2D HW enabler for alto5_premium. All rights reserved © 2017
-su -c setprop persist.sys.ui.hw 1
 
 # Stripalov TCP fix for alto5_premium. All rights reserved © 2016
 busybox sysctl -w net.ipv4.tcp_timestamps=0
@@ -1471,8 +1473,8 @@ busybox sysctl -w net.ipv4.tcp_slow_start_after_idle=0
 
 # Stripalov VM tweaks for alto5_premium. All rights reserved © 2016
 busybox sysctl -w vm.oom_dump_tasks=0
-busybox sysctl -w vm.oom_kill_allocating_task=1
-busybox sysctl -w vm.vfs_cache_pressure=1000
+busybox sysctl -w vm.oom_kill_allocating_task=0
+busybox sysctl -w vm.vfs_cache_pressure=200
 busybox sysctl -w vm.overcommit_memory=1
 busybox sysctl -w vm.overcommit_ratio=150
 busybox sysctl -w vm.dirty_expire_centisecs=500
@@ -1524,13 +1526,19 @@ busybox echo 64 > /sys/kernel/mm/ksm/pages_to_scan
 echo 500 > /sys/kernel/mm/ksm/sleep_millisecs
 
 # Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
-# Enable adaptive LMK
-echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 # Don't kill background apps
 echo 0,16384,16384,16384,16384,16384 > /sys/module/lowmemorykiller/parameters/minfree
 
+# Fixes from Marshmallow
+echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+echo 2 > /proc/sys/kernel/sched_window_stats_policy
+echo 50 > /proc/sys/kernel/sched_small_task
+
 # Stripalov device name fix for alto5_premium. All rights reserved © 2017
 su -c setprop persist.sys.device_name alto5_premium
+
+# Stripalov 2D HW enabler for alto5_premium. All rights reserved © 2017
+su -c setprop persist.sys.ui.hw 1
 
 # Stripalov YOTA/MTS hack for alto5_premium. All rights reserved © 2016 2017
 # Stripalov LTE fix for alto5_premium. All rights reserved © 2016
