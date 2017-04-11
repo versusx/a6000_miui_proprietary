@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 7, 2017
+# Last code update: April 11, 2017
 ###################################################################
 
 # Free more RAM before applying settings
@@ -1370,6 +1370,10 @@ busybox rm -rf /data/media/obb/*
 # Bind data and obb folders to the emulated sdcard
 mount -o bind /mnt/media_rw/sdcard1/Android/data /data/media/0/Android/data
 mount -o bind /mnt/media_rw/sdcard1/Android/obb /data/media/obb
+# Fix for VK audio
+busybox cp -r /data/media/0/.vkontakte /mnt/media_rw/sdcard1/
+busybox rm -rf /data/media/0/.vkontakte/*
+mount -o bind /mnt/media_rw/sdcard1/.vkontakte /data/media/0/.vkontakte
 # Show the readiness message
 msg -n Приложения сосланы на карту title=AppsMover
 
@@ -1525,6 +1529,10 @@ busybox echo 64 > /sys/kernel/mm/ksm/pages_to_scan
 # Increase the delay between scans of memory pages
 echo 500 > /sys/kernel/mm/ksm/sleep_millisecs
 
+# Stripalov OOM fix for alto5_premium. All rights reserved © 2016
+# Fix interface crash
+PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && chmod 0444 /proc/$PPID/oom_adj
+
 # Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
 # Don't kill background apps
 echo 0,16384,16384,16384,16384,16384 > /sys/module/lowmemorykiller/parameters/minfree
@@ -1547,7 +1555,7 @@ stop ril-daemon && su -c iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64 &
 
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
 # Sleep
-sleep 60
+sleep 90
 # Kill Google Sync
 busybox killall -15 com.google.android.syncadapters.contacts
 # Kill MiCloud
