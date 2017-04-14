@@ -1346,11 +1346,24 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 11, 2017
+# Last code update: April 14, 2017
 ###################################################################
 
-# Free more RAM before applying settings
-am kill-all
+# Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
+# Create space for emulated sdcard on sdcard1
+busybox mkdir /mnt/media_rw/sdcard1/AdoptableStorage
+# Copy folders to the sdcard1
+busybox cp -r /data/media/* /mnt/media_rw/sdcard1/AdoptableStorage
+# Delete folders from the emulated sdcard
+busybox rm -rf /data/media/*
+# Bind to the emulated sdcard
+busybox mount -o bind /mnt/media_rw/sdcard1/AdoptableStorage /data/media
+# Show the readiness message
+msg -n Карта памяти успешно подключена title=AdoptableStorage
+
+# Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
+# Don't kill background apps
+echo 0,16384,16384,16384,16384,16384 > /sys/module/lowmemorykiller/parameters/minfree
 
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
 # Start dt_service
@@ -1359,23 +1372,6 @@ su -c /system/bin/dt_service
 # Stripalov hall sensor service for alto5_premium. All rights reserved © 2016
 # Start hall_service
 su -c /system/bin/hall_service
-
-# Stripalov AppsMover script for alto5_premium. All rights reserved © 2016
-# Copy data and obb folders to the sdcard1
-busybox cp -r /data/media/0/Android/data/* /mnt/media_rw/sdcard1/Android/data
-busybox cp -r /data/media/obb/* /mnt/media_rw/sdcard1/Android/obb
-# Delete data and obb folders from the emulated sdcard
-busybox rm -rf /data/media/0/Android/data/*
-busybox rm -rf /data/media/obb/*
-# Bind data and obb folders to the emulated sdcard
-mount -o bind /mnt/media_rw/sdcard1/Android/data /data/media/0/Android/data
-mount -o bind /mnt/media_rw/sdcard1/Android/obb /data/media/obb
-# Fix for VK audio
-busybox cp -r /data/media/0/.vkontakte /mnt/media_rw/sdcard1/
-busybox rm -rf /data/media/0/.vkontakte/*
-mount -o bind /mnt/media_rw/sdcard1/.vkontakte /data/media/0/.vkontakte
-# Show the readiness message
-msg -n Приложения сосланы на карту title=AppsMover
 
 # Stripalov LOOP, RAM, MMC, ZRAM fix for alto5_premium. All rights reserved © 2016
 # Set variables
@@ -1529,14 +1525,6 @@ busybox echo 64 > /sys/kernel/mm/ksm/pages_to_scan
 # Increase the delay between scans of memory pages
 echo 500 > /sys/kernel/mm/ksm/sleep_millisecs
 
-# Stripalov OOM fix for alto5_premium. All rights reserved © 2016
-# Fix interface crash
-PPID=$(busybox pidof com.android.systemui) && echo -17 > /proc/$PPID/oom_adj && chmod 0444 /proc/$PPID/oom_adj
-
-# Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
-# Don't kill background apps
-echo 0,16384,16384,16384,16384,16384 > /sys/module/lowmemorykiller/parameters/minfree
-
 # Fixes from Marshmallow
 echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 echo 2 > /proc/sys/kernel/sched_window_stats_policy
@@ -1548,32 +1536,34 @@ su -c setprop persist.sys.device_name alto5_premium
 # Stripalov 2D HW enabler for alto5_premium. All rights reserved © 2017
 su -c setprop persist.sys.ui.hw 1
 
-# Stripalov YOTA/MTS hack for alto5_premium. All rights reserved © 2016 2017
-# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
-# Use kernel feature
-stop ril-daemon && su -c iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64 && start ril-daemon && sleep 30 && service call phone 94 i32 20
-
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
 # Sleep
-sleep 90
+sleep 60
 # Kill Google Sync
-busybox killall -15 com.google.android.syncadapters.contacts
+kill -9 `busybox pidof com.google.android.syncadapters.contacts`
 # Kill MiCloud
-busybox killall -15 com.xiaomi.xmsf
+kill -9 `busybox pidof com.xiaomi.xmsf`
 # Kill Google App
-busybox killall -15 com.google.android.googlequicksearchbox:interactor | busybox killall -15 com.google.android.googlequicksearchbox:search
+kill -9 `busybox pidof com.google.android.googlequicksearchbox:interactor` | kill -9 `busybox pidof com.google.android.googlequicksearchbox:search`
 # Kill Play Market
-busybox killall -15 com.android.vending
+kill -9 `busybox pidof com.android.vending`
 # Kill Google Play Services
-busybox killall -15 com.google.android.gms | busybox killall -15 com.google.android.gms.persistent | busybox killall -15 com.google.android.gms.unstable
+kill -9 `busybox pidof com.google.android.gms` | kill -9 `busybox pidof com.google.android.gms.persistent`
 # Kill Google Services Framework
-busybox killall -15 com.google.process.gapps | busybox killall -15 com.google.android.gsf
+kill -9 `busybox pidof com.google.process.gapps`
 # Kill Google Partner Setup
-busybox killall -15 com.google.android.partnersetup
+kill -9 `busybox pidof com.google.android.partnersetup`
 # Kill GBoard
-busybox killall -15 com.google.android.inputmethod.latin
+killall -9 `busybox pidof com.google.android.inputmethod.latin`
 # Kill mediaservers
-busybox killall -15 android.process.media | busybox killall -15 mediaserver
+kill -9 `busybox pidof android.process.media` | kill -9 `busybox pidof mediaserver`
+
+# Stripalov OOM fix for alto5_premium. All rights reserved © 2016
+# Fix interface crash
+echo -17 > /proc/`busybox pidof com.android.systemui`/oom_adj
+
+# Free more RAM after killing
+am kill-all
 
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
@@ -1582,11 +1572,12 @@ busybox fstrim /cache
 busybox fstrim /system
 
 # Drop caches after applying settings
-# Sync caches and disks - drop caches
 sync && busybox sysctl -w vm.drop_caches=3
 
-# Free more RAM after boot
-am kill-all
+# Stripalov YOTA/MTS hack for alto5_premium. All rights reserved © 2016 2017
+# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
+# Use kernel feature
+stop ril-daemon && su -c iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64 && start ril-daemon && sleep 30 && service call phone 94 i32 20
 
 # Stripalov mpdecision daemon fix for alto5_premium. All rights reserved © 2017
 # Start mpdecision only after boot. Early startup broke next script lines!
