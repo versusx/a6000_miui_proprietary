@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 14, 2017
+# Last code update: April 17, 2017
 ###################################################################
 
 # Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
@@ -1355,7 +1355,11 @@ busybox mkdir /mnt/media_rw/sdcard1/AdoptableStorage
 # Copy folders to the sdcard1
 busybox cp -r /data/media/* /mnt/media_rw/sdcard1/AdoptableStorage
 # Delete folders from the emulated sdcard
-busybox rm -rf /data/media/*
+busybox rm -r /data/media/0/* && busybox rm -r /data/media/legacy/* && busybox rm -r /data/media/obb/*
+# Fix for TWRP
+busybox mkdir /data/media/0/TWRP && busybox cp -r /mnt/media_rw/sdcard1/AdoptableStorage/0/TWRP/.twrps /data/media/0/TWRP
+# Fix for mediaserver
+cd /data/media/0 && busybox touch .nomedia
 # Bind to the emulated sdcard
 busybox mount -o bind /mnt/media_rw/sdcard1/AdoptableStorage /data/media
 # Show the readiness message
