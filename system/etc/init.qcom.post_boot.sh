@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 17, 2017
+# Last code update: April 21, 2017
 ###################################################################
 
 # Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
@@ -1545,8 +1545,6 @@ su -c setprop persist.sys.ui.hw 1
 sleep 60
 # Kill Google Sync
 kill -9 `busybox pidof com.google.android.syncadapters.contacts`
-# Kill MiCloud
-kill -9 `busybox pidof com.xiaomi.xmsf`
 # Kill Google App
 kill -9 `busybox pidof com.google.android.googlequicksearchbox:interactor` | kill -9 `busybox pidof com.google.android.googlequicksearchbox:search`
 # Kill Play Market
@@ -1559,14 +1557,34 @@ kill -9 `busybox pidof com.google.process.gapps`
 kill -9 `busybox pidof com.google.android.partnersetup`
 # Kill GBoard
 killall -9 `busybox pidof com.google.android.inputmethod.latin`
+# Kill MiCloud
+kill -9 `busybox pidof com.xiaomi.xmsf`
 # Kill mediaservers
 kill -9 `busybox pidof android.process.media` | kill -9 `busybox pidof mediaserver`
 
-# Stripalov OOM fix for alto5_premium. All rights reserved © 2016
-# Fix interface crash
+# Stripalov OOM fix for alto5_premium. All rights reserved © 2016 2017
+# Fix MiuiSystemUI crash on RAM oops
 echo -17 > /proc/`busybox pidof com.android.systemui`/oom_adj
+# Fix Google Sync
+echo 15 > /proc/`busybox pidof com.google.android.syncadapters.contacts`/oom_adj
+# Fix Google App
+echo 15 > /proc/`busybox pidof com.google.android.googlequicksearchbox:interactor`/oom_adj | echo 15 > /proc/`busybox pidof com.google.android.googlequicksearchbox:search`/oom_adj
+# Fix Play Market
+echo 15 > /proc/`busybox pidof com.android.vending`/oom_adj
+# Fix Google Play Services
+echo 15 > /proc/`busybox pidof com.google.android.gms`/oom_adj | echo 15 > /proc/`busybox pidof com.google.android.gms.persistent`/oom_adj
+# Fix Google Services Framework
+echo 15 > /proc/`busybox pidof com.google.process.gapps`/oom_adj
+# Fix Google Partner Setup
+echo 15 > /proc/`busybox pidof com.google.android.partnersetup`/oom_adj
+# Fix GBoard
+echo 15 > /proc/`busybox pidof com.google.android.inputmethod.latin`/oom_adj
+# Fix MiCloud
+echo 15 > /proc/`busybox pidof com.xiaomi.xmsf`/oom_adj
+# Fix mediaservers
+echo 15 > /proc/`busybox pidof android.process.media`/oom_adj | echo 15 > /proc/`busybox pidof mediaserver`/oom_adj
 
-# Free more RAM after killing
+# Free more RAM after killing and changing OOM levels
 am kill-all
 
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
