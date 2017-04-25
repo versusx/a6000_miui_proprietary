@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 21, 2017
+# Last code update: April 25, 2017
 ###################################################################
 
 # Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
@@ -1540,6 +1540,11 @@ su -c setprop persist.sys.device_name alto5_premium
 # Stripalov 2D HW enabler for alto5_premium. All rights reserved © 2017
 su -c setprop persist.sys.ui.hw 1
 
+# Stripalov YOTA/MTS hack for alto5_premium. All rights reserved © 2016 2017
+# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
+# Use kernel feature
+stop ril-daemon && su -c iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64 && start ril-daemon && sleep 30 && service call phone 94 i32 20
+
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
 # Sleep
 sleep 60
@@ -1584,22 +1589,20 @@ echo 15 > /proc/`busybox pidof com.xiaomi.xmsf`/oom_adj
 # Fix mediaservers
 echo 15 > /proc/`busybox pidof android.process.media`/oom_adj | echo 15 > /proc/`busybox pidof mediaserver`/oom_adj
 
-# Free more RAM after killing and changing OOM levels
-am kill-all
-
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
 busybox fstrim /data
 busybox fstrim /cache
 busybox fstrim /system
 
+# Fix mm-qcamera-daemon crash
+stop mm-qcamera-daemon
+
 # Drop caches after applying settings
 sync && busybox sysctl -w vm.drop_caches=3
 
-# Stripalov YOTA/MTS hack for alto5_premium. All rights reserved © 2016 2017
-# Stripalov LTE fix for alto5_premium. All rights reserved © 2016
-# Use kernel feature
-stop ril-daemon && su -c iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64 && start ril-daemon && sleep 30 && service call phone 94 i32 20
+# Free more RAM after killing and changing OOM levels
+am kill-all
 
 # Stripalov mpdecision daemon fix for alto5_premium. All rights reserved © 2017
 # Start mpdecision only after boot. Early startup broke next script lines!
