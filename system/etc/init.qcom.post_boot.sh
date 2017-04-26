@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 25, 2017
+# Last code update: April 26, 2017
 ###################################################################
 
 # Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
@@ -1546,26 +1546,24 @@ su -c setprop persist.sys.ui.hw 1
 stop ril-daemon && su -c iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64 && start ril-daemon && sleep 30 && service call phone 94 i32 20
 
 # Stripalov killer for alto5_premium. All rights reserved © 2016 2017
-# Sleep
-sleep 60
-# Kill Google Sync
-kill -9 `busybox pidof com.google.android.syncadapters.contacts`
-# Kill Google App
-kill -9 `busybox pidof com.google.android.googlequicksearchbox:interactor` | kill -9 `busybox pidof com.google.android.googlequicksearchbox:search`
-# Kill Play Market
-kill -9 `busybox pidof com.android.vending`
-# Kill Google Play Services
-kill -9 `busybox pidof com.google.android.gms` | kill -9 `busybox pidof com.google.android.gms.persistent`
-# Kill Google Services Framework
-kill -9 `busybox pidof com.google.process.gapps`
-# Kill Google Partner Setup
-kill -9 `busybox pidof com.google.android.partnersetup`
-# Kill GBoard
-killall -9 `busybox pidof com.google.android.inputmethod.latin`
-# Kill MiCloud
-kill -9 `busybox pidof com.xiaomi.xmsf`
-# Kill mediaservers
-kill -9 `busybox pidof android.process.media` | kill -9 `busybox pidof mediaserver`
+# Force stop Google Sync
+am force-stop com.google.android.syncadapters.contacts
+# Force stop Google App
+am force-stop com.google.android.googlequicksearchbox
+# Force stop Play Market
+am force-stop com.android.vending
+# Force stop Google Play Services
+am force-stop com.google.android.gms
+# Force stop Google Services Framework
+am force-stop com.google.process.gapps
+# Force stop Google Partner Setup
+am force-stop com.google.android.partnersetup
+# Force stop GBoard
+am force-stop com.google.android.inputmethod.latin
+# Force stop MiCloud
+am force-stop com.xiaomi.xmsf
+# Force stop mediaservers
+am force-stop android.process.media | kill -9 `busybox pidof mediaserver`
 
 # Stripalov OOM fix for alto5_premium. All rights reserved © 2016 2017
 # Fix MiuiSystemUI crash on RAM oops
