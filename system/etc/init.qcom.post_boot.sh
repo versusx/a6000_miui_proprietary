@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 26, 2017
+# Last code update: April 27, 2017
 ###################################################################
 
 # Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
@@ -1419,7 +1419,7 @@ chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 echo 90 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
 chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/target_loads
 # Set above_hispeed_delay
-echo 1209600 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+echo 2000000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 # Set go_hispeed_load
 echo 10 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 echo 0444 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
@@ -1601,6 +1601,9 @@ sync && busybox sysctl -w vm.drop_caches=3
 
 # Free more RAM after killing and changing OOM levels
 am kill-all
+
+# Stop perfd before mpdecision
+stop perfd
 
 # Stripalov mpdecision daemon fix for alto5_premium. All rights reserved © 2017
 # Start mpdecision only after boot. Early startup broke next script lines!
