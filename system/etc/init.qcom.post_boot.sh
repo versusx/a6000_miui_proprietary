@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 27, 2017
+# Last code update: April 28, 2017
 ###################################################################
 
 # Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
@@ -1423,15 +1423,24 @@ echo 2000000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 # Set go_hispeed_load
 echo 10 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 echo 0444 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-# Disable CPU thermal protection
+# Fix timer_slack
+echo -1 > /sys/devices/system/cpu/cpufreq/interactive/timer_slack
+echo 0444 /sys/devices/system/cpu/cpufreq/interactive/timer_slack
+# Enable CPU thermal protection
 echo 1 > /sys/module/msm_thermal/core_control/enabled
 
 # Stripalov Adreno 306 fix for alto5_premium. All rights reserved © 2016
+# Enable performance governor for GPU
+echo performance > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/devfreq/1c00000.qcom,kgsl-3d0/governor
 # Fix low gaming speed
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_bus_on
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_rail_on
 echo 1 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/force_clk_on
 echo 1000000 > /sys/devices/soc.0/1c00000.qcom,kgsl-3d0/kgsl/kgsl-3d0/idle_timer
+
+# Stripalov DDR tuner for alto5_premium. All rights reserved © 2016
+# Enable performance governor for DDR bus 
+echo performance > /sys/devices/soc.0/qcom,cpubw.30/devfreq/qcom,cpubw.30/governor
 
 # Stripalov TCP fix for alto5_premium. All rights reserved © 2016
 busybox sysctl -w net.ipv4.tcp_timestamps=0
@@ -1525,7 +1534,7 @@ echo 0 > /dev/cpuset/background/cpus
 
 # Stripalov KSM fix for alto5_premium. All rights reserved © 2016
 # Scan less pages
-busybox echo 64 > /sys/kernel/mm/ksm/pages_to_scan
+echo 64 > /sys/kernel/mm/ksm/pages_to_scan
 # Increase the delay between scans of memory pages
 echo 500 > /sys/kernel/mm/ksm/sleep_millisecs
 
