@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: April 28, 2017
+# Last code update: May 02, 2017
 ###################################################################
 
 # Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
@@ -1569,6 +1569,8 @@ am force-stop com.google.process.gapps
 am force-stop com.google.android.partnersetup
 # Force stop GBoard
 am force-stop com.google.android.inputmethod.latin
+# Force stop Settings
+am force-stop com.android.settings
 # Force stop MiCloud
 am force-stop com.xiaomi.xmsf
 # Force stop mediaservers
@@ -1591,6 +1593,8 @@ echo 15 > /proc/`busybox pidof com.google.process.gapps`/oom_adj
 echo 15 > /proc/`busybox pidof com.google.android.partnersetup`/oom_adj
 # Fix GBoard
 echo 15 > /proc/`busybox pidof com.google.android.inputmethod.latin`/oom_adj
+# Fix Settings
+echo 15 > /proc/`busybox pidof com.android.settings`/oom_adj
 # Fix MiCloud
 echo 15 > /proc/`busybox pidof com.xiaomi.xmsf`/oom_adj
 # Fix mediaservers
