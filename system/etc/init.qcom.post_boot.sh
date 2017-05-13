@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: May 02, 2017
+# Last code update: May 13, 2017
 ###################################################################
 
 # Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
@@ -1487,16 +1487,17 @@ busybox sysctl -w net.ipv4.tcp_slow_start_after_idle=0
 # Stripalov VM tweaks for alto5_premium. All rights reserved © 2016
 busybox sysctl -w vm.oom_dump_tasks=0
 busybox sysctl -w vm.oom_kill_allocating_task=0
-busybox sysctl -w vm.vfs_cache_pressure=200
+busybox sysctl -w vm.vfs_cache_pressure=10
 busybox sysctl -w vm.overcommit_memory=1
 busybox sysctl -w vm.overcommit_ratio=150
 busybox sysctl -w vm.dirty_expire_centisecs=500
 busybox sysctl -w vm.dirty_writeback_centisecs=3000
 busybox sysctl -w vm.block_dump=0
 busybox sysctl -w vm.laptop_mode=0
-busybox sysctl -w vm.min_free_kbytes=2691
-busybox sysctl -w vm.min_free_order_shift=4
-busybox sysctl -w vm.page-cluster=2
+busybox sysctl -w vm.min_free_kbytes=512
+busybox sysctl -w vm.extra_free_kbytes=1024
+busybox sysctl -w vm.min_free_order_shift=5
+busybox sysctl -w vm.page-cluster=0
 busybox sysctl -w vm.dirty_background_ratio=10
 busybox sysctl -w vm.dirty_ratio=20
 busybox sysctl -w vm.swappiness=100
@@ -1579,26 +1580,6 @@ am force-stop android.process.media | kill -9 `busybox pidof mediaserver`
 # Stripalov OOM fix for alto5_premium. All rights reserved © 2016 2017
 # Fix MiuiSystemUI crash on RAM oops
 echo -17 > /proc/`busybox pidof com.android.systemui`/oom_adj
-# Fix Google Sync
-echo 15 > /proc/`busybox pidof com.google.android.syncadapters.contacts`/oom_adj
-# Fix Google App
-echo 15 > /proc/`busybox pidof com.google.android.googlequicksearchbox:interactor`/oom_adj | echo 15 > /proc/`busybox pidof com.google.android.googlequicksearchbox:search`/oom_adj
-# Fix Play Market
-echo 15 > /proc/`busybox pidof com.android.vending`/oom_adj
-# Fix Google Play Services
-echo 15 > /proc/`busybox pidof com.google.android.gms`/oom_adj | echo 15 > /proc/`busybox pidof com.google.android.gms.persistent`/oom_adj
-# Fix Google Services Framework
-echo 15 > /proc/`busybox pidof com.google.process.gapps`/oom_adj
-# Fix Google Partner Setup
-echo 15 > /proc/`busybox pidof com.google.android.partnersetup`/oom_adj
-# Fix GBoard
-echo 15 > /proc/`busybox pidof com.google.android.inputmethod.latin`/oom_adj
-# Fix Settings
-echo 15 > /proc/`busybox pidof com.android.settings`/oom_adj
-# Fix MiCloud
-echo 15 > /proc/`busybox pidof com.xiaomi.xmsf`/oom_adj
-# Fix mediaservers
-echo 15 > /proc/`busybox pidof android.process.media`/oom_adj | echo 15 > /proc/`busybox pidof mediaserver`/oom_adj
 
 # Stripalov fstrim task for alto5_premium. All rights reserved © 2016
 # Run fstrim via busybox
@@ -1606,17 +1587,17 @@ busybox fstrim /data
 busybox fstrim /cache
 busybox fstrim /system
 
-# Fix mm-qcamera-daemon crash
-stop mm-qcamera-daemon
-
 # Drop caches after applying settings
 sync && busybox sysctl -w vm.drop_caches=3
 
-# Free more RAM after killing and changing OOM levels
-am kill-all
+# Fix mm-qcamera-daemon crash
+stop mm-qcamera-daemon
 
 # Stop perfd before mpdecision
 stop perfd
+
+# Free more RAM after killing and changing OOM levels
+am kill-all
 
 # Stripalov mpdecision daemon fix for alto5_premium. All rights reserved © 2017
 # Start mpdecision only after boot. Early startup broke next script lines!
