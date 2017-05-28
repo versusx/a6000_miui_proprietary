@@ -1346,7 +1346,7 @@ echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
 ###################################################################
 # This is proprietary part of the code
 # Linux kernel version: 3.10.72@Marshmallow-MIUI-Kernel
-# Last code update: May 13, 2017
+# Last code update: May 28, 2017
 ###################################################################
 
 # Stripalov AdoptableStorage script for alto5_premium. All rights reserved © 2016 2017
@@ -1367,7 +1367,7 @@ msg -n Карта памяти успешно подключена title=Adoptab
 
 # Stripalov LMK tweak for alto5_premium. All rights reserved © 2016
 # Don't kill background apps
-echo 0,16384,16384,16384,16384,16384 > /sys/module/lowmemorykiller/parameters/minfree
+echo 0,8192,8192,8192,8192,8192 > /sys/module/lowmemorykiller/parameters/minfree
 
 # Stripalov double tap service for alto5_premium. All rights reserved © 2017
 # Start dt_service
