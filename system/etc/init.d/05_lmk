@@ -1,0 +1,4 @@
+#!/system/bin/sh
+# Copyright (c) 2017, Stripalov. All rights reserved.
+# Don't kill background apps
+echo 0,8192,8192,8192,8192,8192 > /sys/module/lowmemorykiller/parameters/minfree

@@ -1,0 +1,5 @@
+#!/system/bin/sh
+# Copyright (c) 2017, Stripalov. All rights reserved.
+# Copyright (c) 2015, TCT. All rights reserved.
+# Start hall_listener
+su -c /system/bin/hall_listener

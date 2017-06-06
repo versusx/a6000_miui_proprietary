@@ -1,0 +1,6 @@
+#!/system/bin/sh
+# Copyright (c) 2017, Stripalov. All rights reserved.
+# Set codename to property
+setprop persist.sys.device_name alto5_premium
+# Enable 2D accelerate
+setprop persist.sys.ui.hw 1

@@ -1,8 +1,4 @@
 #!/system/bin/sh
-# Stripalov hall sensor service for alto5_premium. All rights reserved © 2016
-# It uses proprietary driver from TCT kernel. All rights reserved © 2015
-# Enable gpio-keys driver for hall sensor
-echo 1 > /sys/devices/soc.0/gpio_keys.65/init_ok
 # Catch getevent hall signal and turn on display
 (busybox script -q -c 'getevent /dev/input/event8' /dev/null | while read code; do echo "$code" | grep -q '^0001 00fa 00000001.$' && input keyevent 26; done) < /dev/null > /dev/null 2>/dev/null &
 # Catch getevent hall signal and turn off display
