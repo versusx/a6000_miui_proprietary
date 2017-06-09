@@ -1,6 +1,11 @@
 #!/system/bin/sh
 # Copyright (c) 2017, Stripalov. All rights reserved.
-# Set codename to property
-setprop persist.sys.device_name alto5_premium
+# Disable NuPlayer
+setprop persist.sys.media.use-awesome true
 # Enable 2D accelerate
 setprop persist.sys.ui.hw 1
+# Fix device name
+setprop persist.sys.device_name alto5_premium
+# Get modem version from firmware image
+modemver=`cat /firmware/verinfo/non.ver`
+setprop gsm.version.baseband $modemver
