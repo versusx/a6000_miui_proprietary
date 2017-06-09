@@ -17,7 +17,7 @@ chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
 echo 20 20000:20 400000:30 533333:40 800000:50 998400:60 1094400:70 1152000:80 1209600:90 > /sys/devices/system/cpu/cpufreq/interactive/target_loads
 chmod 0444 /sys/devices/system/cpu/cpufreq/interactive/target_loads
 # Set above_hispeed_delay
-echo 2000000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+echo 1800000 > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
 # Set go_hispeed_load
 echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
 echo 0444 /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
