@@ -2,3 +2,6 @@
 # Copyright (c) 2017, Stripalov. All rights reserved.
 # Set TTL to 64 and fix LTE band
 stop ril-daemon && iptables -t mangle -A POSTROUTING -j TTL --ttl-set 64 && start ril-daemon && sleep 30 && service call phone 94 i32 20
+# Get modem version from firmware image
+modemver=`cat /firmware/verinfo/non.ver`
+setprop gsm.version.baseband $modemver
