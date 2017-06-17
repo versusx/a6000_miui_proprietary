@@ -1,0 +1,248 @@
+#!/system/bin/sh
+# New Zipalign MOD For 2.3-5.x
+# Copyright (C) 2015 Judy4302
+# For Lollipop support by Judy4302 XDA
+
+
+
+ZA=/data/zipalign-file/Zipalign_Lollipop.log
+ZA_LOG=/data/zipalign-file/Zipalign_Kitkat_JellyBean_ICS.log
+ZIPALIGNDB=/data/zipalign_lollipop.db
+ZIPALIGNDB_KK=/data/zipalign_kitkat.db
+SysDir=/system/priv-app
+
+if [ -e $ZA ]; then
+	busybox rm $ZA
+fi
+
+if [ -e $ZIPALIGNDB ]; then
+	busybox rm $ZIPALIGNDB
+fi
+
+if [ ! -f $ZIPALIGNDB ]; then
+	busybox touch $ZIPALIGNDB
+fi
+
+busybox echo "# New Zipalign log" | tee -a $ZA
+busybox echo "" | tee -a $ZA
+busybox echo "Starting Automatic ZipAlign For 5.x (If your device is 4.x or 2.3, you can ignore this.) $( date +"%m-%d-%Y %H:%M:%S" )" | tee -a $ZA
+
+#Zipalign /Data 
+
+for DIR in /data/app/*; do
+  cd $DIR
+  for APK in *.apk; do
+      zipalign -c 4 $APK
+      if [ $? -eq 1 ]; then
+        echo "Now aligning: $DIR/$APK" | tee -a $ZA
+        for DIRC in /sdcard/download/*; do
+			cd $APK
+            zipalign -f 4 $DIR/$APK $DIRC/$APK
+			if [ -e $DIRC/$APK ]; then
+                busybox mount -o rw,remount /system
+			    busybox mount -o rw,remount /data
+                busybox cp -f -p $DIRC/$APK $DIR/$APK
+		        busybox chmod 644 $APK
+                busybox rm -f $DIRC/$APK               
+				echo "Zipalign finished: $DIR/$APK" | tee -a $ZA
+				grep "$DIR/$APK" $ZIPALIGNDB > /dev/null || echo $DIR/$APK >> $ZIPALIGNDB	
+			else
+                echo "Zipalign failed: $DIR/$APK" | tee -a $ZA		
+			fi	
+		done		
+      else
+        echo "Already aligned: $DIR/$APK" | tee -a $ZA
+        grep "$DIR/$APK" $ZIPALIGNDB > /dev/null || echo $DIR/$APK >> $ZIPALIGNDB
+      fi
+  done
+done
+
+#Zipalign /system 
+
+for DIR in /system/app/*; do
+  cd $DIR
+  for APK in *.apk; do
+      zipalign -c 4 $APK
+      if [ $? -eq 1 ]; then
+        echo "Now aligning: $DIR/$APK" | tee -a $ZA
+        for DIRC in /sdcard/download/*; do
+			cd $APK
+            zipalign -f 4 $DIR/$APK $DIRC/$APK
+			if [ -e $DIRC/$APK ]; then
+                busybox mount -o rw,remount /system
+			    busybox mount -o rw,remount /data
+                busybox cp -f -p $DIRC/$APK $DIR/$APK
+		        busybox chmod 644 $APK
+                busybox rm -f $DIRC/$APK
+				echo "Zipalign finished: $DIR/$APK" | tee -a $ZA
+				grep "$DIR/$APK" $ZIPALIGNDB > /dev/null || echo $DIR/$APK >> $ZIPALIGNDB	
+			else
+                echo "Zipalign failed: $DIR/$APK" | tee -a $ZA		
+			fi	
+		done		  
+      else
+        echo "Already aligned: $DIR/$APK" | tee -a $ZA
+        grep "$DIR/$APK" $ZIPALIGNDB > /dev/null || echo $DIR/$APK >> $ZIPALIGNDB
+      fi
+  done
+done
+
+if [ -d $SysDir ]; then
+    for DIR in /system/priv-app/*; do
+      cd $DIR
+      for APK in *.apk; do
+          zipalign -c 4 $APK
+          if [ $? -eq 1 ]; then
+            echo "Now aligning: $DIR/$APK" | tee -a $ZA
+            for DIRC in /sdcard/download/*; do
+		    	cd $APK
+                zipalign -f 4 $DIR/$APK $DIRC/$APK
+			    if [ -e $DIRC/$APK ]; then
+                    busybox mount -o rw,remount /system
+			        busybox mount -o rw,remount /data
+                    busybox cp -f -p $DIRC/$APK $DIR/$APK
+		            busybox chmod 644 $APK
+                    busybox rm -f $DIRC/$APK
+		    		echo "Zipalign finished: $DIR/$APK" | tee -a $ZA
+					grep "$DIR/$APK" $ZIPALIGNDB > /dev/null || echo $DIR/$APK >> $ZIPALIGNDB	
+			    else
+                    echo "Zipalign failed: $DIR/$APK" | tee -a $ZA		
+			    fi	
+		    done		  
+          else
+            echo "Already aligned: $DIR/$APK" | tee -a $ZA
+            grep "$DIR/$APK" $ZIPALIGNDB > /dev/null || echo $DIR/$APK >> $ZIPALIGNDB
+          fi
+      done
+    done
+fi	
+
+# Zipalign for framework (4.x and 5.x)
+for DIR in /system/framework; do
+  cd $DIR
+  for APK in *.apk ; do
+      zipalign -c 4 $APK
+      if [ $? -eq 0 ]; then
+        echo "Already aligned: $DIR/$APK" | tee -a $ZA
+        grep "$DIR/$APK" $ZIPALIGNDB > /dev/null || echo $DIR/$APK >> $ZIPALIGNDB
+      else
+        echo "Now aligning: $DIR/$APK" | tee -a $ZA
+        zipalign -f 4 $APK /sdcard/download/$APK
+		if [ -e /sdcard/download/$APK ]; then
+            busybox mount -o rw,remount /system
+			busybox mount -o rw,remount /data
+            cp -f -p /sdcard/download/$APK $APK
+		    chmod 644 $APK
+            busybox rm -f /sdcard/download/$APK
+			echo "Zipalign finished: $DIR/$APK" | tee -a $ZA
+		else
+            echo "Zipalign failed: $DIR/$APK" | tee -a $ZA
+		fi	
+        grep "$DIR/$APK" $ZIPALIGNDB > /dev/null || echo $DIR/$APK >> $ZIPALIGNDB
+      fi
+  done
+done
+
+touch $ZIPALIGNDB
+busybox echo "Automatic ZipAlign finished at $( date +"%m-%d-%Y %H:%M:%S" )" | tee -a $ZA
+
+# ---------- Zipalign For Android 4.x ----------
+if [ -e $ZA_LOG ]; then
+	rm $ZA_LOG
+fi
+
+if [ -e $ZIPALIGNDB_KK ]; then
+	rm $ZIPALIGNDB_KK
+fi
+
+if [ ! -f $ZIPALIGNDB_KK ]; then
+	touch $ZIPALIGNDB_KK
+fi
+
+busybox echo "# New Zipalign log" | tee -a $ZA_LOG
+busybox echo "" | tee -a $ZA_LOG
+busybox echo "Starting Automatic ZipAlign For 4.x (If your device is 5.x, you can ignore this.) $( date +"%m-%d-%Y %H:%M:%S" )" | tee -a $ZA_LOG
+
+# Zipalign /data
+for DIRS in /data/app; do
+  cd $DIRS
+  for APK in *.apk; do
+      zipalign -c 4 $APK
+      if [ $? -eq 1 ]; then
+        echo "Now aligning: $DIRS/$APK" | tee -a $ZA_LOG
+        zipalign -f 4 $APK /sdcard/download/$APK
+		if [ -e /sdcard/download/$APK ]; then
+            busybox mount -o rw,remount /system
+			busybox mount -o rw,remount /data
+            cp -f -p /sdcard/download/$APK $APK
+		    chmod 644 $APK
+            busybox rm -f /sdcard/download/$APK
+			echo "Zipalign finished: $DIRS/$APK" | tee -a $ZA_LOG
+		else
+            echo "Zipalign failed: $DIRS/$APK" | tee -a $ZA_LOG		
+		fi	
+		grep "$DIRS/$APK" $ZIPALIGNDB_KK > /dev/null || echo $DIRS/$APK >> $ZIPALIGNDB_KK
+      else
+		echo "Already aligned: $DIRS/$APK" | tee -a $ZA_LOG
+        grep "$DIRS/$APK" $ZIPALIGNDB_KK > /dev/null || echo $DIRS/$APK >> $ZIPALIGNDB_KK
+      fi
+  done
+done
+
+#Zipalign /system 
+
+for DIRS in /system/app; do
+  cd $DIRS
+  for APK in *.apk; do
+      zipalign -c 4 $APK
+      if [ $? -eq 1 ]; then
+        echo "Now aligning: $DIRS/$APK" | tee -a $ZA_LOG
+        zipalign -f 4 $APK /sdcard/download/$APK
+		if [ -e /sdcard/download/$APK ]; then
+            busybox mount -o rw,remount /system
+			busybox mount -o rw,remount /data
+            cp -f -p /sdcard/download/$APK $APK
+		    chmod 644 $APK
+            busybox rm -f /sdcard/download/$APK
+			echo "Zipalign finished: $DIRS/$APK" | tee -a $ZA_LOG
+		else
+            echo "Zipalign failed: $DIRS/$APK" | tee -a $ZA_LOG		
+		fi	
+		grep "$DIRS/$APK" $ZIPALIGNDB_KK > /dev/null || echo $DIRS/$APK >> $ZIPALIGNDB_KK
+      else
+		echo "Already aligned: $DIRS/$APK" | tee -a $ZA_LOG
+        grep "$DIRS/$APK" $ZIPALIGNDB_KK > /dev/null || echo $DIRS/$APK >> $ZIPALIGNDB_KK
+      fi
+  done
+done
+
+if [ -d $SysDir ]; then
+    for DIRS in /system/priv-app; do
+      cd $DIRS
+      for APK in *.apk; do
+          zipalign -c 4 $APK
+          if [ $? -eq 1 ]; then
+            echo "Now aligning: $DIRS/$APK" | tee -a $ZA_LOG
+            zipalign -f 4 $APK /sdcard/download/$APK
+		    if [ -e /sdcard/download/$APK ]; then
+                busybox mount -o rw,remount /system
+				busybox mount -o rw,remount /data
+                cp -f -p /sdcard/download/$APK $APK
+		        chmod 644 $APK
+                busybox rm -f /sdcard/download/$APK
+		    	echo "Zipalign finished: $DIRS/$APK" | tee -a $ZA_LOG
+		    else
+                echo "Zipalign failed: $DIRS/$APK" | tee -a $ZA_LOG		
+		    fi	
+		    grep "$DIRS/$APK" $ZIPALIGNDB_KK > /dev/null || echo $DIRS/$APK >> $ZIPALIGNDB_KK
+          else
+		    echo "Already aligned: $DIRS/$APK" | tee -a $ZA_LOG
+            grep "$DIRS/$APK" $ZIPALIGNDB_KK > /dev/null || echo $DIRS/$APK >> $ZIPALIGNDB_KK
+          fi
+      done
+    done
+fi	
+
+
+touch $ZIPALIGNDB_KK
+busybox echo "Automatic ZipAlign finished at $( date +"%m-%d-%Y %H:%M:%S" )" | tee -a $ZA_LOG
