@@ -178,8 +178,6 @@
     <bool name="support_small_win_cover">false</bool>
     <!--whether show my device-->
     <bool name="support_my_device">true</bool>
-    <!--the vendor feature, it's value may be qcom,mediatek,leadcore or nvidia-->
-    <string name="vendor">qcom</string>
     <!--Flag of reduce preview size in camera(1:reduce, 0:do not reduce; 1st byte:rear camera, 2nd byte:front camera, 3rd byte:rear video, 4th byte:front video )-->
     <integer name="camera_reduce_preview_flag">0</integer>
     <!--max number of burst images one time -->
